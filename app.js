@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,
     1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-    1,0,1,1,1,3,1,1,1,0,1,1,1,0,1,1,1,0,0,1,1,1,2,1,1,1,0,1,
+    1,0,1,1,1,3,1,1,1,0,1,1,1,0,1,1,1,0,0,1,1,2,2,1,1,1,0,1,
     1,0,1,0,0,0,0,1,0,0,1,4,1,0,1,4,4,1,0,1,2,2,2,2,2,1,0,1,
     1,0,1,1,1,0,0,1,0,0,1,1,1,0,1,1,1,0,0,1,2,2,2,2,2,1,0,1,
     1,0,0,0,1,0,0,1,0,0,1,4,1,0,1,0,0,1,0,1,1,1,1,1,1,1,0,1,
@@ -151,18 +151,41 @@ document.addEventListener('DOMContentLoaded', () => {
       this.timerId = NaN
     }
   }
-
-  aliens = [
-    new Alien('lumpo', 274, 250),
-    new Alien('sinko', 275,  300),
-    new Alien('sticko', 302, 400),
+  var aliens = [
+    new Alien('lumpo', 275, 250),
+    new Alien('sinko', 273, 300),
+    new Alien('sticko', 303, 400),
     new Alien('mike', 301, 500)
   ]
 
   //draw aliens on grid
   aliens.forEach(alien => {
     squares[alien.currentIndex].classList.add(alien.className)
-    squares[alien.currentIndex].classList.add(alien.className)
+    squares[alien.currentIndex].classList.add('alien')
   })
+
+  //move aliens randomly
+  aliens.forEach(alien => moveAlien(alien))
+
+  //write the function to move aliens
+  function moveAlien(alien) {
+    const directions =[-1, +1, width, -width]
+    let direction = directions[Math.floor(Math.random() * directions.length)]
+
+    alien.timerId = setInterval(function() {
+      //if alien is not heading into wall or another alien, they can go there
+      if (!squares[alien.currentIndex + direction].classList.contains('wall') &&
+      !squares[alien.currentIndex + direction].classList.contains('alien')) {
+        //you can go here
+        //remove all alien related classes
+        squares[alien.currentIndex].classList.remove(alien.className, 'alien', 'launched-alien')
+        //change the current index to the new safe square
+        alien.currentIndex += direction
+        //redraw the alien in the new safe space
+        squares[alien.currentIndex].classList.add(alien.className, 'alien')
+        //else find new direction to try
+      } else direction = directions[Math.floor(Math.random() * directions.length)]
+    }, alien.speed)
+  }
 
 })
