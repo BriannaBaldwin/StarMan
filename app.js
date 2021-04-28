@@ -30,9 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
     1,0,0,0,1,0,0,1,0,0,1,4,1,0,1,0,0,1,0,1,1,1,1,1,1,1,0,1,
     1,0,1,1,1,0,0,1,0,0,1,4,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,
     1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,1,0,1,0,0,1,0,0,1,
-    1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,1,4,1,0,1,1,0,1,0,0,1,
-    1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,1,1,0,1,4,1,1,0,0,1,
-    4,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,1,4,4,1,0,0,1,
+    1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,4,1,0,1,1,0,1,0,0,1,
+    1,0,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,4,1,1,0,0,1,
+    4,0,1,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,0,1,0,1,4,4,1,0,0,1,
     1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,1,4,4,1,0,0,1,
     1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,3,0,0,0,1,1,1,1,1,1,0,1,
     1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
   createBoard()
 
   //starting position of star-man
-  let starmanCurrentIndex = 425;
+  let starmanCurrentIndex = 489;
 
   squares[starmanCurrentIndex].classList.add('star-man');
 
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         !squares[starmanCurrentIndex -1].classList.contains('alien-lair'))
         starmanCurrentIndex -=1
          
-        //check if pacman is in the left exit
+        //check if starman is in the left exit
          if((starmanCurrentIndex -1) === 447) {
           starmanCurrentIndex = 26
         }
@@ -126,8 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     starBitCollected();
     jetpackCollected();
-    //checkForGameOver()
-    //checkForWin()
+    checkForGameOver()
+    checkForWin()
 
   }
   document.addEventListener('keyup', moveStarman)
@@ -214,9 +214,37 @@ document.addEventListener('DOMContentLoaded', () => {
         score +=100
         squares[alien.currentIndex].classList.add(alien.className, 'alien')
       }
-
+      checkForGameOver()
     }, alien.speed)
   }
 
+  //check for game over
+  function checkForGameOver() {
+    if (squares[starmanCurrentIndex].classList.contains('alien') &&
+    !squares[starmanCurrentIndex].classList.contains('scared-alien')) {
+      aliens.forEach(alien => clearInterval(alien.timerId))
+      document.removeEventListener('keyup', moveStarman)
+      setTimeout(function(){alert('Game Over!')
+      }, 250)
+    }
+  }
+
+  //count star-bits in map
+  var totalBits = 0;
+  for(var i = 0; i < layout.length; i++) {
+    if(layout[i] == 0) {
+      ++totalBits
+    }
+  }
+  console.log(totalBits)
+    //check for win
+    function checkForWin() {
+      if (score >= totalBits) {
+        aliens.forEach(alien => clearInterval(alien.timerId))
+        document.removeEventListener('keyup', moveStarman)
+        setTimeout(function(){alert('YOU WON!\n' + 'Final score: ' + score)
+        }, 250)
+      }
+    }
 
 })
