@@ -131,13 +131,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
   document.addEventListener('keyup', moveStarman)
+  
+  //count starting star-bits in map
+  var totalBits = 0;
+  for(var i = 0; i < layout.length; i++) {
+    if(layout[i] == 0) {
+      ++totalBits
+    }
+  }
+  console.log('totalBits: ' + totalBits)
+  var remainingBits = totalBits
 
   //starman collects star-bit
   function starBitCollected(){
     if(squares[starmanCurrentIndex].classList.contains('star-bit')) {
-      score++
+      ++score
       scoreDisplay.innerHTML = score
       squares[starmanCurrentIndex].classList.remove('star-bit')
+      --remainingBits
+      console.log('remainingBits: ' + remainingBits)
     }
   }
 
@@ -229,17 +241,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  //count star-bits in map
-  var totalBits = 0;
-  for(var i = 0; i < layout.length; i++) {
-    if(layout[i] == 0) {
-      ++totalBits
-    }
-  }
-  console.log(totalBits)
     //check for win
     function checkForWin() {
-      if (score >= totalBits) {
+      if (remainingBits == 0) {
         aliens.forEach(alien => clearInterval(alien.timerId))
         document.removeEventListener('keyup', moveStarman)
         setTimeout(function(){alert('YOU WON!\n' + 'Final score: ' + score)
