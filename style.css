@@ -35,7 +35,41 @@ Original Author: Brianna Baldwin
   border-radius: 10px;
 }
 
+.lumpo {
+  background-color: red;
+  border: 0px;
+}
+
+.stinko {
+  background-color: green;
+  border: 0px;
+}
+
+.sticko {
+  background-color: pink;
+  border: 0px;
+}
+
+.mike {
+  background-color: orange;
+  border: 0px;
+}
+
+.launched-alien {
+  background-color: aquamarine;
+  border: 0px;
+}
+
+
+
+
+
+
+
+
+
 .star-man {
   background-color: yellow;
   border-radius: 10px;
+  border: 0px;
 }

@@ -12,26 +12,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid');
   const scoreDisplay = document.getElementById('score');
   const width = 28; //28 x 28 = 784 squares
+  let score = 0;
 
   //layout of grid | what's in the squares
   const layout = [
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,
-    1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,
-    1,0,1,1,1,1,1,1,1,4,4,1,0,1,1,0,1,4,4,1,1,1,1,1,1,1,0,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,
+    1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,
+    1,0,1,1,1,1,1,1,1,4,4,1,0,0,0,0,1,4,4,1,1,1,1,1,1,1,0,1,
     1,0,0,0,0,0,0,0,0,1,4,1,0,0,0,3,1,4,1,0,0,0,0,0,0,0,0,1,
     1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,
     1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-    1,0,1,1,1,3,1,1,1,0,1,1,1,0,1,1,1,0,0,0,0,2,2,0,0,0,0,1,
-    1,0,1,0,0,0,0,1,0,0,1,4,1,0,1,4,4,1,0,2,2,2,2,2,2,0,0,1,
-    1,0,1,1,1,0,0,1,0,0,1,1,1,0,1,1,1,0,0,2,2,2,2,2,2,0,0,1,
-    1,0,0,0,1,0,0,1,0,0,1,4,1,0,1,0,0,1,0,2,2,2,2,2,2,0,0,1,
+    1,0,1,1,1,3,1,1,1,0,1,1,1,0,1,1,1,0,0,1,1,1,2,1,1,1,0,1,
+    1,0,1,0,0,0,0,1,0,0,1,4,1,0,1,4,4,1,0,1,2,2,2,2,2,1,0,1,
+    1,0,1,1,1,0,0,1,0,0,1,1,1,0,1,1,1,0,0,1,2,2,2,2,2,1,0,1,
+    1,0,0,0,1,0,0,1,0,0,1,4,1,0,1,0,0,1,0,1,1,1,1,1,1,1,0,1,
     1,0,1,1,1,0,0,1,0,0,1,4,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,
     1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,1,0,1,0,0,1,0,0,1,
     1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,1,4,1,0,1,1,0,1,0,0,1,
     1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,1,1,0,1,4,1,1,0,0,1,
-    1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,1,4,4,1,0,0,1,
+    4,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,1,4,4,1,0,0,1,
     1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,1,4,4,1,0,0,1,
     1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,3,0,0,0,1,1,1,1,1,1,0,1,
     1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,
@@ -65,6 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
         squares[i].classList.add('star-bit');
       } else if (layout[i] === 1) {
         squares[i].classList.add('wall');
+      } else if (layout[i] == 2) {
+        squares[i].classList.add('alien-lair')
       } else if (layout[i] === 3) {
         squares[i].classList.add('jetpack');
       }
@@ -84,26 +87,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
     switch(e.keyCode) {
       case 37:
-        if(starmanCurrentIndex % width !== 0) starmanCurrentIndex -=1
+        if(starmanCurrentIndex % width !== 0 && 
+        !squares[starmanCurrentIndex -1].classList.contains('wall') &&
+        !squares[starmanCurrentIndex -1].classList.contains('alien-lair'))
+        starmanCurrentIndex -=1
+         
+        //check if pacman is in the left exit
+         if((starmanCurrentIndex -1) === 447) {
+          starmanCurrentIndex = 26
+        }
         break
       case 38:
-        if(starmanCurrentIndex - width >= 0) starmanCurrentIndex -=width
+        if(starmanCurrentIndex - width >= 0 && 
+          !squares[starmanCurrentIndex -width].classList.contains('wall') &&
+          !squares[starmanCurrentIndex -width].classList.contains('alien-lair')) 
+          starmanCurrentIndex -=width
+
+          //check if starman is in the top exit
+          if((starmanCurrentIndex -width) === -2) {
+            starmanCurrentIndex = 448
+          }
         break
       case 39:
-        if(starmanCurrentIndex % width < width -1) starmanCurrentIndex +=1
+        if(starmanCurrentIndex % width < width -1 && 
+          !squares[starmanCurrentIndex +1].classList.contains('wall') &&
+          !squares[starmanCurrentIndex +1].classList.contains('alien-lair')) 
+          starmanCurrentIndex +=1
         break
       case 40:
-        if(starmanCurrentIndex + width < width * width) starmanCurrentIndex +=width
+        if(starmanCurrentIndex + width < width * width && 
+          !squares[starmanCurrentIndex +width].classList.contains('wall') &&
+          !squares[starmanCurrentIndex +width].classList.contains('alien-lair')) 
+          starmanCurrentIndex +=width
         break
     }
 
     squares[starmanCurrentIndex].classList.add('star-man');
 
-    //starBitCollected()
+    starBitCollected();
     //jetpackCollected()
     //checkForGameOver()
     //checkForWin()
 
   }
   document.addEventListener('keyup', moveStarman)
+
+  //starman collects star-bit
+  function starBitCollected(){
+    if(squares[starmanCurrentIndex].classList.contains('star-bit')) {
+      score++
+      scoreDisplay.innerHTML = score
+      squares[starmanCurrentIndex].classList.remove('star-bit')
+    }
+  }
+
+  //create alien template
+  class Alien {
+    constructor(className, startIndex, speed) {
+      this.className = className
+      this.startIndex = startIndex
+      this.speed = speed
+      this.currentIndex = startIndex
+      this.timerId = NaN
+    }
+  }
+
+  aliens = [
+    new Alien('lumpo', 274, 250),
+    new Alien('sinko', 275,  300),
+    new Alien('sticko', 302, 400),
+    new Alien('mike', 301, 500)
+  ]
+
+  //draw aliens on grid
+  aliens.forEach(alien => {
+    squares[alien.currentIndex].classList.add(alien.className)
+    squares[alien.currentIndex].classList.add(alien.className)
+  })
+
 })
