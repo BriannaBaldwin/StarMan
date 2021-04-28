@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     squares[starmanCurrentIndex].classList.add('star-man');
 
     starBitCollected();
-    //jetpackCollected()
+    jetpackCollected();
     //checkForGameOver()
     //checkForWin()
 
@@ -141,6 +141,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  //when starman collects jetpack
+  function jetpackCollected() {
+    if(squares[starmanCurrentIndex].classList.contains('jetpack')) {
+      score +=10
+      aliens.forEach(alien => alien.isScared = true)
+      setTimeout(unScareAlien, 10000)
+      squares[starmanCurrentIndex].classList.remove('jetpack')
+    }
+  }
+
+  //make aliens stop appearing as aquamarine
+  function unScareAlien(){
+    aliens.forEach(alien => alien.isScared = false)
+  }
+
   //create alien template
   class Alien {
     constructor(className, startIndex, speed) {
@@ -149,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.speed = speed
       this.currentIndex = startIndex
       this.timerId = NaN
+      this.isScared = false
     }
   }
   var aliens = [
@@ -178,15 +194,29 @@ document.addEventListener('DOMContentLoaded', () => {
       !squares[alien.currentIndex + direction].classList.contains('alien')) {
         //you can go here
         //remove all alien related classes
-        squares[alien.currentIndex].classList.remove(alien.className, 'alien', 'launched-alien')
+        squares[alien.currentIndex].classList.remove(alien.className, 'alien', 'scared-alien')
         //change the current index to the new safe square
         alien.currentIndex += direction
         //redraw the alien in the new safe space
         squares[alien.currentIndex].classList.add(alien.className, 'alien')
         //else find new direction to try
       } else direction = directions[Math.floor(Math.random() * directions.length)]
+
+      //if alien is scared
+      if (alien.isScared) {
+        squares[alien.currentIndex].classList.add('scared-alien')
+      }
+
+      //if alien scared and starman runs into it
+      if(alien.isScared && squares[alien.currentIndex].classList.contains('star-man')) {
+        squares[alien.currentIndex].classList.remove(alien.className, 'alien', 'scared-alien')
+        alien.currentIndex = alien.startIndex
+        score +=100
+        squares[alien.currentIndex].classList.add(alien.className, 'alien')
+      }
+
     }, alien.speed)
   }
 
-  
+
 })
