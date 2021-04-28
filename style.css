@@ -6,3 +6,36 @@ Original Author: Brianna Baldwin
  Modification log:
     04/27/2021 - Created file
     */
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 560px;
+  height: 560px;
+  border: solid black;
+}
+
+.grid div {
+  width: 20px;
+  height: 20px;
+}
+
+.star-bit {
+  background-color: green;
+  border: 5px solid white;
+  box-sizing: border-box;
+}
+
+.wall {
+  background-color: blue;
+}
+
+.jetpack {
+  background-color: green;
+  border-radius: 10px;
+}
+
+.star-man {
+  background-color: yellow;
+  border-radius: 10px;
+}
