@@ -6,6 +6,8 @@ Original Author: Brianna Baldwin
  Modified by: Brianna Baldwin
  Modification log:
     04/27/2021 - Created file
+    04/28/2021 - Made grid. Added Starman movement. Added alien movement. Added game logic. Created custom level finished logic. 
+    04/30/2021 - Small edits to grid
     */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //layout of grid | what's in the squares
   const layout = [
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,1,
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
     1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,
     1,0,1,1,1,1,1,1,1,4,4,1,0,0,0,0,1,4,4,1,1,1,1,1,1,1,0,1,
@@ -24,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,
     1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-    1,0,1,1,1,3,1,1,1,0,1,1,1,0,1,1,1,0,0,1,1,2,2,1,1,1,0,1,
+    1,0,1,1,1,3,1,1,1,0,1,1,1,0,1,1,1,0,0,1,1,1,4,1,1,1,0,1,
     1,0,1,0,0,0,0,1,0,0,1,4,1,0,1,4,4,1,0,1,2,2,2,2,2,1,0,1,
     1,0,1,1,1,0,0,1,0,0,1,1,1,0,1,1,1,0,0,1,2,2,2,2,2,1,0,1,
     1,0,0,0,1,0,0,1,0,0,1,4,1,0,1,0,0,1,0,1,1,1,1,1,1,1,0,1,
@@ -94,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
          
         //check if starman is in the left exit
          if((starmanCurrentIndex -1) === 447) {
-          starmanCurrentIndex = 26
+          starmanCurrentIndex = 25
         }
         break
       case 38:
@@ -104,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
           starmanCurrentIndex -=width
 
           //check if starman is in the top exit
-          if((starmanCurrentIndex -width) === -2) {
+          if((starmanCurrentIndex -width) === -3) {
             starmanCurrentIndex = 448
           }
         break
@@ -132,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   document.addEventListener('keyup', moveStarman)
   
+
   //count starting star-bits in map
   var totalBits = 0;
   for(var i = 0; i < layout.length; i++) {
